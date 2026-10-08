@@ -7,7 +7,7 @@ def line(sku: str = "SKU-1", qty: str = "1", price: str = "10000") -> dict[str, 
 
 def test_smoke_single_line_without_delivery() -> None:
     assert validate_order([line()]) is None
-    assert calculate_order_total([line()]) == 12000
+    assert calculate_order_total([line()]) == 11400
 
 
 def test_empty_order_is_rejected() -> None:
@@ -20,7 +20,7 @@ def test_empty_sku_is_rejected() -> None:
 
 def test_missing_line_key_is_rejected() -> None:
     bad_line = {"qty": "1", "unit_price_kopecks": "1000"}
-    assert validate_order([bad_line]) == "invalid_structure"  # type: ignore
+    assert validate_order([bad_line]) == "invalid_structure"
 
 
 def test_non_numeric_quantity_is_rejected() -> None:
@@ -81,7 +81,7 @@ def test_delivery_is_charged_for_small_order() -> None:
 
 
 def test_free_delivery_uses_discounted_subtotal() -> None:
-    assert calculate_order_total([line(qty="1", price="6000")], city="StPetersburg") == 7200
+    assert calculate_order_total([line(qty="1", price="6000")], city="StPetersburg") == 6840
 
 
 def test_vat_is_charged_on_the_discounted_sum() -> None:

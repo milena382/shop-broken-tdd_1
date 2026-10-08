@@ -43,11 +43,7 @@ def note(text: str) -> None:
 
 def test_functions(tree: ast.Module) -> list[ast.FunctionDef]:
     """Тестовые функции верхнего уровня."""
-    return [
-        node
-        for node in tree.body
-        if isinstance(node, ast.FunctionDef) and node.name.startswith("test_")
-    ]
+    return [node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name.startswith("test_")]
 
 
 def is_stub(node: ast.FunctionDef) -> bool:
@@ -81,11 +77,7 @@ def check_tests() -> tuple[ast.Module | None, list[str]]:
     if len(functions) < MIN_TESTS:
         problems.append(f"написано {len(functions)} тестов, нужно минимум {MIN_TESTS}")
 
-    empty = [
-        node.name
-        for node in functions
-        if not any(isinstance(child, ast.Assert) for child in ast.walk(node))
-    ]
+    empty = [node.name for node in functions if not any(isinstance(child, ast.Assert) for child in ast.walk(node))]
     if empty:
         problems.append(f"в этих тестах нет assert: {', '.join(empty)}")
 
