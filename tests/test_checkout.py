@@ -86,3 +86,12 @@ def test_free_delivery_uses_discounted_subtotal() -> None:
 
 def test_vat_is_charged_on_the_discounted_sum() -> None:
     assert calculate_order_total([line(qty="2", price="5000")]) == 11400
+
+
+def test_expensive_vip_order_is_rejected() -> None:
+    """Заказы, где стоимость одного товара составляет 1 000 001 копейку или больше, отклоняются."""
+    # Товар стоимостью ровно 10 000 рублей (1 000 000 копеек) — проходит
+    assert validate_order([line(price="1000000")]) is None
+
+    # Товар стоимостью 1 000 001 копейка — должен отклониться с ошибкой
+    assert validate_order([line(price="1000001")]) == "vip_order_not_supported"

@@ -1,5 +1,7 @@
 VALID_PROMOS = {"HAPPY2026": 20, "SUPER30": 30}
 VALID_CITIES = {"Moscow", "StPetersburg"}
+# Single-line orders above this price are VIP orders, which the shop does not support.
+VIP_PRICE_LIMIT_KOPEKS = 1_000_000
 
 
 def _validate_item_structure(item: dict[str, str]) -> bool:
@@ -15,10 +17,13 @@ def _validate_item_values(item: dict[str, str]) -> str | None:
     except ValueError:
         return "invalid_quantity"
     try:
-        if int(item["unit_price_kopecks"]) < 0:
-            return "invalid_price"
+        price = int(item["unit_price_kopecks"])
     except ValueError:
         return "invalid_price"
+    if price < 0:
+        return "invalid_price"
+    if price > VIP_PRICE_LIMIT_KOPEKS:
+        return "vip_order_not_supported"
     return None
 
 
